@@ -1,0 +1,261 @@
+package sql;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.swing.JOptionPane;
+import javax.swing.plaf.metal.MetalBorders.OptionDialogBorder;
+
+public class Helper {
+	Connection conn;
+	Statement stmt;
+	String[] text_e={"员工姓名","员工编号","员工性别","身份证号","住址","员工年龄","联系方式","职位"};
+	
+	private static Helper instance=new Helper();
+	public static Helper getinstance(){
+		return instance;
+	}
+
+	public Helper(){
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			conn=DriverManager.getConnection("jdbc:mysql://localhost:3316/supermarketmanagement?useUnicode=true&characterEncoding=UTF-8", "root", "");
+			JOptionPane.showMessageDialog(null, "成功连接到数据库！");
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		Statement stmt=conn.createStatement();
+		
+//		int rows=stmt.executeUpdate("UPDATE 部门 set 部门编号=部门编号+1");
+//		System.out.println("更新语句修改了"+rows+"行");
+//		ResultSet rst=stmt.executeQuery("select* from 部门");
+//		while(rst.next()){
+//			System.out.println(rst.getString("部门名称"));
+//			System.out.println(rst.getInt("部门编号"));
+//		}
+		//conn.close();
+	}
+	
+	private void updatemessage() throws Exception{
+		//Class.forName("com.mysql.jdbc.Driver");
+		//Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3316/supermarketmanagement?useUnicode=true&characterEncoding=UTF-8", "root", "");
+
+		Statement stmt=conn.createStatement();
+		int rows=stmt.executeUpdate("UPDATE 部门 set 部门编号=部门编号+1");
+		System.out.println("更新语句修改了"+rows+"行");
+		ResultSet rst=stmt.executeQuery("select* from 员工");
+		/*while(rst.next()){
+			System.out.println(rst.getString("部门名称"));
+			System.out.println(rst.getInt("部门编号"));
+		}*/
+	}
+	public void update() throws Exception{
+		updatemessage();
+	}
+
+	public void settext(Object[][] rowData,int choice){
+		switch(choice){
+			case 1:
+			try {
+				gettext_emp(rowData);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				break;
+			case 2:
+			try {
+				gettext_com(rowData);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				break;
+				default:
+		}
+		
+	}
+
+	private void gettext_com(Object[][] rowData) throws Exception{
+		String[] text={"商品名称：", "商品编号：", "供应商编号：", "供应商名称：", "商品库存：","售卖单价：","进货单价："};
+		//Class.forName("com.mysql.jdbc.Driver");
+		//Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3316/supermarketmanagement?useUnicode=true&characterEncoding=UTF-8", "root", "");
+		Statement stmt=conn.createStatement();
+		ResultSet rst=stmt.executeQuery("select* from 商品");
+		int j=0;
+		while(rst.next()){
+			for(int i=0;i<7;i++){
+				rowData[j][i]=rst.getString(text[i]);
+			}
+			j++;
+		}
+		
+	}
+
+	private void gettext_emp(Object[][] rowData) throws Exception{
+		
+		//Class.forName("com.mysql.jdbc.Driver");
+		//Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3316/supermarketmanagement?useUnicode=true&characterEncoding=UTF-8", "root", "");
+		Statement stmt=conn.createStatement();
+		ResultSet rst=stmt.executeQuery("select* from 员工");
+		int j=0;
+		while(rst.next()){
+			for(int i=0;i<8;i++){
+				rowData[j][i]=rst.getString(text_e[i]);
+			}
+			j++;
+		}
+	}
+
+	public void add_e(String[] content) {
+		if(content[3].equals("")){
+			JOptionPane.showMessageDialog(null, "身份证号不能为空！","格式错误",JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		if(content[0].equals("")){
+			JOptionPane.showMessageDialog(null, "员工姓名不能为空！","格式错误",JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		if(content[1].equals("")){
+			JOptionPane.showMessageDialog(null, "员工编号不能为空！","格式错误",JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		if(!single_num(content)){
+			JOptionPane.showMessageDialog(null, "员工编号已存在！","格式错误",JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		if(!single_id(content)){
+			JOptionPane.showMessageDialog(null, "员工身份证号已存在！","格式错误",JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		String str="INSERT INTO 员工 VALUES(";
+		for(int i=0;i<8;i++){
+			
+			if(i!=0)
+				str+=",";
+			if(!content[i].equals("")){
+				str=str+content[i];
+			}
+			else
+				str=str+"NULL";
+		}
+		str+=")";
+		
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(str);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+	}
+
+	private boolean single_id(String[] content) {
+		String str = "SELECT * from 员工";
+		ResultSet rst;
+		try {
+			stmt = conn.createStatement();
+			rst = stmt.executeQuery(str);
+			while(rst.next()){
+				if(content[3].equals(rst.getString("身份证号"))){
+					return false;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+	private boolean single_num(String[] content) {
+		String str = "SELECT * from 员工";
+		ResultSet rst;
+		try {
+			stmt = conn.createStatement();
+			rst = stmt.executeQuery(str);
+			while(rst.next()){
+				if(content[1].equals(rst.getString("员工编号"))){
+					return false;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+	public void del_e(String[] content) {
+		if(!exists(content))
+			return;
+		String str="DELETE FROM 员工 WHERE 身份证号="+content[3];
+		System.out.println(str);
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(str);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	public void fin_e(String[] content) {
+		if(!exists(content))
+			return;
+		String str = "select* from 员工 WHERE 身份证号="+content[3];
+		ResultSet rst1;
+		try {
+			stmt = conn.createStatement();
+			rst1 = stmt.executeQuery(str);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private boolean exists(String[] content) {
+		if(content[3].equals("")){
+			JOptionPane.showMessageDialog(null, "请检查你的输入！身份证号不能为空！","格式错误",JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		String str = "SELECT * from 员工";
+		ResultSet rst;
+		try {
+			stmt = conn.createStatement();
+			rst = stmt.executeQuery(str);
+			while(rst.next()){
+				if(content[3]==rst.getString("身份证号")){
+					for(int i=0;i<8;i++){
+						if(content[i]=="")
+							continue;
+						if(!content[i].equals(rst.getString(text_e[i]))){
+							JOptionPane.showMessageDialog(null, "不存在这个人！请检查你的输入！","格式错误",JOptionPane.ERROR_MESSAGE);
+							return false;
+						}
+					}
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
+	
+}

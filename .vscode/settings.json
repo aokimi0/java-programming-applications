@@ -1,0 +1,7 @@
+{
+    "java.project.sourcePaths": [
+        "Thinking-in-Java-4th-Edition-Source-Code-master",
+        "lab3"
+    ],
+    "java.debug.settings.onBuildFailureProceed": true
+}

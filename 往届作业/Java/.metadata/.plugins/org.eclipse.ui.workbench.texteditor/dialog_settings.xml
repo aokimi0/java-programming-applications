@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item value="471" key="DIALOG_WIDTH"/>
+		<item value="237" key="DIALOG_Y_ORIGIN"/>
+		<item value="600" key="DIALOG_HEIGHT"/>
+		<item value="1275" key="DIALOG_X_ORIGIN"/>
+		<item value="1|Microsoft YaHei UI|9.0|0|WINDOWS|1|-24|0|0|0|400|0|0|0|1|0|0|0|0|Microsoft YaHei UI" key="DIALOG_FONT_NAME"/>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item value="true" key="wrap"/>
+		<item value="false" key="isRegEx"/>
+		<item value="false" key="casesensitive"/>
+		<item value="false" key="incremental"/>
+		<item value="false" key="wholeword"/>
+		<item value="" key="selection"/>
+		<list key="findhistory">
+			<item value="system"/>
+			<item value="system、"/>
+			<item value="exist"/>
+			<item value="SqlHelp"/>
+			<item value="stream"/>
+			<item value="thread"/>
+			<item value="25"/>
+			<item value="illustrate"/>
+		</list>
+		<list key="replacehistory">
+			<item value="Helper"/>
+			<item value="30"/>
+			<item value="buildover"/>
+			<item value="port"/>
+			<item value="DownPart_client"/>
+			<item value="UpPart_client"/>
+			<item value="panelserver"/>
+			<item value="frameserver"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.GotoLineAction$GotoLineDialog_dialogBounds">
+		<item value="572" key="DIALOG_Y_ORIGIN"/>
+		<item value="819" key="DIALOG_X_ORIGIN"/>
+	</section>
+</section>
